@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from "react"
+import { useState, useEffect } from "react"
 import { ImageList } from "./slider/ImageList"
 
 
 export default function App() {
   const test = false
-  const [select, setSelect] = useState(0)
+  const [select, setSelect] = useState(ImageList.length)
 
-  const prev = () => {
-    setSelect(old => {
-      if (old == 5) {
-        return 2
-      }
-      return old - 1
-    })
-  }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      next()
+    }, 1500)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
 
   const next = () => {
     setSelect(old => {
@@ -24,9 +24,18 @@ export default function App() {
     })
   }
 
+  const prev = () => {
+    setSelect(old => {
+      if (old == 1) {
+        return ImageList.length
+      }
+      return old - 1
+    })
+  }
+
   return (
     <div className="grid place-content-center min-h-screen">
-      {/* <h1 className="text-4xl text-center">{"select=" + select}</h1> */}
+      {/* <h1 className="text-8xl text-center pb-5 ">{"select=" + select}</h1> */}
       {/* <h1 className="text-4xl text-center">{select - 1}</h1> */}
 
       <div className={`cContainer  mx-auto ${test ? "w-[15%] border-2 border-red-500" : "w-[50%] overflow-hidden"}`}>
@@ -35,12 +44,14 @@ export default function App() {
 
           {ImageList.map((item, idx) => (
             <img src={item} alt={"id-" + idx} className="grow-0 shrink-0 w-full object-cover transition-transform" key={idx}
-              style={{
-                "transform": select == (ImageList.length + 1) ?
-                  'translateX(-100%)'
-                  :
-                  `translateX(${(idx < select - 1) ? ((ImageList.length - select) * 100) : select * (-100)}%)`,
-              }}
+              style={
+                {
+                  "transform": select == (ImageList.length + 1) ?
+                    'translateX(-100%)'
+                    :
+                    `translateX(${(idx < select - 1) ? ((ImageList.length - select) * 100) : select * (-100)}%)`,
+                }
+              }
             />
           ))}
 
